@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../template.xhtml">
+
+            <ui:define name="content">
+                <h:form id="form">
+
+                    <h:panelGrid columns="2" style="width:100%">
+                        <h:panelGroup >
+                            <h:form>
+                                
+                                <p:commandButton id="btnCarrito" oncomplete="PF('dialogClienteCreate').show()" title="Carrito" value="Carrito"/>
+                                <p:commandButton value="Terminar Compra" action="venta?faces-redirect=true" ajax="false"/>
+                            </h:form>
+
+                            <p:outputLabel value="Cliente:" for="acMaxResults" />
+                            <p:autoComplete id="acMaxResults" maxResults="5" value="#{ventaBean.cliente1}" completeMethod="#{ventaBean.completeText}" />
+
+                        </h:panelGroup>
+                        <p:selectOneMenu value="#{productoBean.categoriaId}">
+                            <f:selectItems value="#{categoriaBean.categorias}" var="cat" 
+                                           itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}"/>
+                            <f:ajax event="valueChange" render="productos"  immediate="true" listener="#{productoBean.categoriaProductos()}"/>
+                        </p:selectOneMenu>
+
+                        <p:dataGrid var="producto" value="#{productoBean.productos}" columns="3" layout="grid"
+                                    rows="12" paginator="true" id="productos" paginatorPosition="bottom"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    rowsPerPageTemplate="6,12,16">
+
+                            <f:facet name="header">
+                                Productos 
+
+                            </f:facet>
+                            <p:panel header="#{producto.nombre}" style="text-align:center">
+                                <h:panelGrid columns="1" style="width:100%">
+                                    <p:graphicImage value="/resources/images/producto/#{producto.imagen}" height="124px"/> 
+
+                                    <h:outputText value="$#{producto.precio}" />
+
+                                    <h:panelGrid columns="1" style="margin-bottom: 10px">
+                                        <p:inputText id="txt1" binding="#{input1}"/>
+                                        <p:slider minValue="0" maxValue="#{producto.cantidad}" for="txt1">
+                                            <p:ajax event="slideEnd" process="txt1" />
+                                        </p:slider>
+                                    </h:panelGrid>
+                                    <h:commandButton value="Añadir al carro" actionListener="#{sp.addtoCart(producto,input1.value)}"/>
+
+                                </h:panelGrid>
+
+                            </p:panel>
+
+                        </p:dataGrid>
+                    </h:panelGrid>
+                    <h:form id="fromCarrito">
+                        <p:dialog header="Carrito de compras" widgetVar="dialogClienteCreate" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="dlgClienteCreate" width="500px">
+                            <p:dataTable id="basicDT" var="i" value="#{sp.cart}"
+                                         paginator="true" paginatorPosition="bottom"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                                <p:column headerText="Nombre">
+                                    <h:outputText value="#{i.producto.nombre}" />
+                                </p:column>
+                                <p:column headerText="Precio">
+                                    <h:outputText value="#{i.producto.precio}" />
+                                </p:column>
+                                <p:column headerText="Cantidad">
+                                    <h:outputText value="#{i.cantidad}" />
+                                </p:column>
+
+                            </p:dataTable>
+                            <h:outputLabel for="total" value="Total:" />
+                            <h:outputText value="$#{sp.total}" />
+                        </p:dialog>
+
+                    </h:form>
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

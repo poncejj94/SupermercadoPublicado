@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../template.xhtml">
+
+            <ui:define name="content">
+                <h:form id="form">
+                    <h:panelGroup >
+                        <h:form>
+                            <p:commandButton id="btnNuevo" value="Nuevo" action="nueva?faces-redirect=true"/>
+                        </h:form>
+                    </h:panelGroup>
+                    <h:form>
+                        <p:dataTable var="venta" value="#{ventaBean.ventas}" widgetVar="ventaTable"
+                                     emptyMessage="No se ha encontrado ventas registadas" filteredValue="#{ventaBean.selectedVentas}">
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Buscar todos los campos:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('ventaTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column filterBy="#{venta.cliente.nombre}" headerText="Nombre Cliente" filterMatchMode="contains">
+                                <h:outputText value="#{venta.cliente.nombre}" />
+                            </p:column>
+
+                            <p:column filterBy="#{venta.fecha}" headerText="Fecha">
+                                <f:facet name="filter">
+                                    <p:outputLabel for="event" value="Select Event:"  />
+   
+                                    <p:calendar id="event" value="#{venta.fecha}">
+                                        <p:ajax event="dateSelect" listener="#{venta.fecha}"/>
+                                    </p:calendar>
+                                    
+                                </f:facet>
+                                <h:outputText value="#{venta.fecha}" />
+                            </p:column>
+
+                            <p:column headerText="Total">
+                                
+                                <h:outputText value="#{venta.total}" />
+                            </p:column>
+
+                            <p:column headerText="Detalles" filterMatchMode="in">
+                                <p:commandButton update="" oncomplete="PF('dialogClienteUpdate').show()" icon="ui-icon-search" title="Actualizar">
+                                    <f:setPropertyActionListener value="#{venta}" target="#{ventaBean.ventas}" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

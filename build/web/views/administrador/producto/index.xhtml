@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../template.xhtml">
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />
+                <h:form>
+                    <p:commandButton id="btnCreateProducto" update=":formCreate" oncomplete="PF('dialogProductoCreate').show()" title="Crear"  value="Crear Producto"/>
+                </h:form>
+
+                <h:form id="formDataTable">
+
+                    <p:selectOneMenu value="#{productoBean.categoriaId}">
+                        <f:selectItems value="#{categoriaBean.categorias}" var="cat" 
+                                       itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}"/>
+                        <f:ajax event="valueChange" render="productos"  immediate="true" listener="#{productoBean.categoriaProductos()}"/>
+                    </p:selectOneMenu>
+
+                    <p:dataGrid var="producto" value="#{productoBean.productos}" columns="3" layout="grid"
+                                rows="12" paginator="true" id="productos" paginatorPosition="bottom"
+                                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="6,12,16">
+
+                        <f:facet name="header">
+                            Productos 
+
+                        </f:facet>
+                        <p:panel header="#{producto.nombre}" style="text-align:center">
+                            <h:panelGrid columns="1" style="width:100%">
+                                <p:graphicImage value="/resources/images/producto/#{producto.imagen}" height="124px"/> 
+                                <h:outputLabel for="precio" value="Precio:" />
+                                <h:outputText id="precio" value="$#{producto.precio}" />
+                                <h:outputLabel for="cantidad" value="Precio:" />
+                                <h:outputText id="cantidad" value="$#{producto.cantidad}" />
+
+                                <p:commandButton value="Actualizar Producto" update=":formUpdate" oncomplete="PF('dialogProductoUpdate').show()"/>
+
+                            </h:panelGrid>
+
+                        </p:panel>
+
+                    </p:dataGrid>
+                </h:form>
+                <h:form id="formCreate">
+                    <p:dialog header="Create Producto" widgetVar="dialogProductoCreate" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="dlgUsuarioCreate">
+                        <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+
+                            <h:outputLabel for="nombre" value="Nombre:" />
+                            <p:inputText id="nombre" value="#{productoBean.producto1.nombre}" required="true" label="username" />
+
+                            <h:outputLabel for="cantidad" value="Cantidad" />
+                            <p:inputText id="cantidad" value="#{productoBean.producto1.cantidad}" required="true" label="password" />
+
+                            <h:outputLabel for="categoria" value="Categoria:" />
+                            <p:selectOneMenu id="categoria" value="#{productoBean.producto1.categoria}">
+                                <f:selectItem itemLabel="- Seleccione -" itemValue="" />
+                                <f:selectItems value="#{categoriaBean.selectOneItemsCategoria}" />
+                            </p:selectOneMenu>
+                            <h:outputLabel for="precio" value="Precio" />
+                            <p:inputText id="precio" value="$#{productoBean.producto1.precio}" required="true" label="password" />
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Crear Producto" actionListener="#{productoBean.btnCreateProducto(event)}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                                <p:commandButton id="btnCreateCancelar"  oncomplete="PF('dialogUsuarioCreate').hide()" title="Cancelar"  value="Cancelar"/>
+                            </f:facet> 
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                
+                <h:form id="formUpdate">
+                    <p:dialog header="Create Producto" widgetVar="dialogProductoUpdate" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="dlgUsuarioCreate">
+                        <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+
+                            <h:outputLabel for="nombre" value="Nombre:" />
+                            <p:inputText id="nombre" value="#{productoBean.producto1.nombre}" required="true" label="username" />
+
+                            <h:outputLabel for="cantidad" value="Cantidad" />
+                            <p:inputText id="cantidad" value="#{productoBean.producto1.cantidad}" required="true" label="password" />
+
+                            <h:outputLabel for="categoria" value="Categoria:" />
+                            <p:selectOneMenu id="categoria" value="#{productoBean.producto1.categoria}">
+                                <f:selectItem itemLabel="- Seleccione -" itemValue="" />
+                                <f:selectItems value="#{categoriaBean.selectOneItemsCategoria}" />
+                            </p:selectOneMenu>
+                            <h:outputLabel for="precio" value="Precio" />
+                            <p:inputText id="precio" value="$#{productoBean.producto1.precio}" required="true" label="password" />
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Crear Producto" actionListener="#{productoBean.btnCreateProducto(event)}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                                <p:commandButton id="btnCreateCancelar"  oncomplete="PF('dialogUsuarioCreate').hide()" title="Cancelar"  value="Cancelar"/>
+                            </f:facet> 
+                        </p:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+            </ui:define>        
+        </ui:composition>
+    </body>
+</html>

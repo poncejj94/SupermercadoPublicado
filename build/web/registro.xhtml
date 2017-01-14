@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro</title>
+        <link href="#{appBean.baseUrl}resources/css/login.css" type="text/css" rel="stylesheet"/>
+    </h:head>
+    <body>
+               <div class="conteiner">
+                    <h:form id="formLogin">
+                        <p:panel header="Ingresar Usuario y Clave">
+                            <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+
+                                <h:outputLabel for="name" value="Nombre:" />
+                                <p:inputText id="name" value="#{clienteBean.cliente1.nombre}" required="true" label="name" />
+
+                                <h:outputLabel for="ci" value="Cedula:" />
+                                <p:inputText id="ci" value="#{clienteBean.cliente1.cedula}" required="true" label="name" />
+
+                                <h:outputLabel for="email" value="Email:" />
+                                <p:inputText id="email" value="#{clienteBean.cliente1.email}" required="true" label="name" />
+
+                                <h:outputLabel for="direccion" value="Direccion:" />
+                                <p:inputText id="dieccion" value="#{clienteBean.cliente1.direccion}" required="true" label="name" />
+
+                                <h:outputLabel for="password" value="Clave:" />
+                                <p:password id="password" value="#{clienteBean.usuario1.clave}" required="true" label="password" />
+
+                                <h:outputLabel for="confirmar_password" value="Confirmar contraseña:" />
+                                <p:password id="confirmar_password" value="#{clienteBean.usuario1.clave}" required="true" label="password" />
+
+                                <f:facet name="footer">
+                                    <p:commandButton value="Crear Cliente" actionListener="#{clienteBean.btnCreateCliente(event)}"/>
+                                    <p:commandButton id="btnCreateCancelar"  oncomplete="PF('dialogClienteCreate').hide()" title="Cancelar"  value="Cancelar"/>
+                                </f:facet> 
+                            </p:panelGrid>
+                        </p:panel>
+                    </h:form>
+                </div>
+    </body>
+</html>

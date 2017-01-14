@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formCabeceraVenta">
+                    <h:panelGrid columns="4">
+                        <h:outputLabel for="nombre" value="Cliente:" />
+                        <p:inputText id="nombre" value="#{ventaBean.cliente1.nombre}" required="true" label="nombre" readonly="true"/>
+                        <h:outputLabel for="cedula" value="Cedula:" />
+                        <p:inputText id="cedula" value="#{ventaBean.cliente1.cedula}" required="true" label="cedula" readonly="true" />
+                        <h:outputLabel for="email" value="Email:" />
+                        <p:inputText id="email" value="#{ventaBean.cliente1.email}" required="true" label="email" readonly="true"/>
+
+                        <h:outputLabel for="direccion" value="Direccion:" />
+                        <p:inputText id="direccion" value="#{ventaBean.cliente1.direccion}" required="true" label="direccion" readonly="true"/>
+                    </h:panelGrid>
+                </h:form>
+                
+                <h:form id="formVenta">
+                    <p:panel id="DetalleVenta" header="Detalle Venta">
+                        <p:dataTable id="basicDT" var="i" value="#{ventaBean.cart}"
+                                     paginator="true" paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{i.producto.nombre}" />
+                            </p:column>
+                            <p:column headerText="Precio">
+                                <h:outputText value="#{i.producto.precio}" />
+                            </p:column>
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{i.cantidad}" />
+                            </p:column>
+                            <p:column headerText="ValorTotal">
+                                <h:outputText value="#{i.valorTotal}" />
+                            </p:column>
+                        </p:dataTable>
+                        
+                        <h:outputLabel for="total" value="SubTotal:" />
+                        <p:inputText value="$#{ventaBean.subtotal}" readonly="true"/>
+                        <h:outputLabel for="total" value="Valor Iva" />
+                        <p:inputText value="$#{ventaBean.valorIva}" readonly="true"/>
+                        <h:outputLabel for="total" value="Total" />
+                        <p:inputText value="$#{ventaBean.total}" readonly="true"/>
+                    </p:panel>
+                </h:form>
+                
+                <form action="https://www.sandbox.paypal.com/webscr&#8221;" method="post" id="basicDT" var="i" value="#{ventaBean.cart}" >
+                    
+                    <input type="hidden" name="cmd" value="_xclick"/>
+                    <input type="hidden" name="business" value="jnponce-facilitator@udlanet.ec" />
+                    <input type="hidden" name="password" value="12345"/>
+                    <input type="hidden" name="custom" value="1123"/>
+                    <input type="hidden" name="TOKEN" value="EC-7FU52529LA221360D"/>
+                    <input type="hidden" name="tx" value="TransactionID"/>
+                    <input type="hidden" name="item_name" value="Compra Shopping Shop"/>
+                    <input type="hidden" name="amount" value="#{ventaBean.total}"/>
+                    <input type="hidden" name="hosted_button_id" value="LAHQRCXWQEZZE"/>
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif?akam_redir=1;" border="0" name="submit" alt="PayPal–Thesafer,easierwaytopayonline!"/>
+                    <input type="hidden" name="return" value="http://localhost:8080/Supermercado/Success.xhtml;"/>
+                    <input type="hidden" name="cancel_return" value="http://localhost:8080/Supermercado/Fail.xhtml;"/>
+                    <input type="hidden" name="notify_url" value="http://localhost:8080/Supermercado/PayPal.xhtml;"/>
+                </form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

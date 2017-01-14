@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<paypal>
+    <authToken>AeVbAqUUzLQoss1W_R8cv4NYS4b-PFmzQdJ7rl5C1-PV180M5R-JaS8nr5EEpOERQ0tvQri9Qk2DB9uP</authToken>
+    <posturl>https://sandbox.paypal.com/cgi-bin/websrc</posturl>
+</paypal>

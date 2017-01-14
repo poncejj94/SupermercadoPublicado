@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../template.xhtml">
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />
+                <h:form>
+                    <p:commandButton id="btnCreateRol" update=":formCreate" oncomplete="PF('dialogRolCreate').show()" title="Crear"  value="Crear Rol"/>
+                </h:form>
+
+                <h:form id="formDataTable">
+                    <p:dataTable id="basicDT" var="rol" value="#{rolBean.rols}"
+                                 paginator="true" paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                        <p:column headerText="Id">
+                            <h:outputText value="#{rol.idPerfil}" />
+                        </p:column>
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{rol.nombre}" />
+                        </p:column>
+                        <p:column headerText="Descripcion">
+                            <h:outputText value="#{rol.descripcion}" />
+                        </p:column>
+                        <p:column headerText="Estado">
+                            <h:outputText value="#{rol.estado}" />
+                        </p:column>
+
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":formUpdate" oncomplete="PF('dialogRolUpdate').show()" icon="ui-icon-search" title="Actualizar">
+                                <f:setPropertyActionListener value="#{rol}" target="#{rolBean.selectedRol}" />
+                            </p:commandButton>
+                        </p:column>
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":formDelete" oncomplete="PF('dialogRolDelete').show()" icon="ui-icon-cancel" title="Eliminar">
+                                <f:setPropertyActionListener value="#{rol}" target="#{rolBean.selectedRol}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="formCreate">
+                    <p:dialog header="Create Rol" widgetVar="dialogRolCreate" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="dlgRolCreate">
+                        <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+
+                            <h:outputLabel for="name" value="Nombre:" />
+                            <p:inputText id="name" value="#{rolBean.rol1.nombre}" required="true" label="name" />
+
+                            <h:outputLabel for="description" value="Descripcion:" />
+                            <p:inputText id="descripcion" value="#{rolBean.rol1.descripcion}" required="true" label="descripion" />
+
+                            <h:outputLabel for="estado" value="Estado:" />
+                            <p:selectOneMenu id="estado" value="#{rolBean.rol1.estado}">
+                                <f:selectItem itemLabel="Activo" itemValue="1" />
+                                <f:selectItem itemLabel="Inactivo" itemValue="0"/>
+                            </p:selectOneMenu>
+                            <f:facet name="footer">
+                                <p:commandButton value="Crear Rol" actionListener="#{rolBean.btnCreateRol(event)}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                                <p:commandButton id="btnCreateCancelar"  oncomplete="PF('dialogRolCreate').hide()" title="Cancelar"  value="Cancelar"/>
+                            </f:facet> 
+                        </p:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+
+                <h:form id="formUpdate">
+                    <p:dialog header="Modificar Rol" widgetVar="dialogRolUpdate" id="dlgRolUpdate" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+                            <h:outputText value="Id:" />
+                            <h:inputText value="#{rolBean.selectedRol.idPerfil}" />
+
+                            <h:outputText value="Nombre:" />
+                            <p:inputText value="#{rolBean.selectedRol.nombre}" />
+
+                            <h:outputText value="Descripcion:" />
+                            <p:inputText value="#{rolBean.selectedRol.descripcion}" />
+                            <h:outputText value="Estado:" />
+                            <p:selectOneMenu id="estado" value="#{rolBean.selectedRol.estado}">
+                                <f:selectItem itemLabel="Activo" itemValue="1" />
+                                <f:selectItem itemLabel="Inactivo" itemValue="0"/>
+                            </p:selectOneMenu>
+                            <f:facet name="footer">
+
+                                <p:commandButton id="btnUpdateAceptar" update=":formDataTable, :msgs" oncomplete="PF('dialogRolUpdate').hide()" actionListener="#{rolBean.btnUpdateRol(event)}" title="Guardar" value="Guardar"/>
+                                <p:commandButton id="btnUpdateCancelar" oncomplete="PF('dialogRolUpdate').hide()" title="Cancelar" value="Cancelar"/>
+                            </f:facet>
+                        </p:panelGrid>
+                    </p:dialog> 
+                </h:form>
+
+                <h:form id="formDelete">
+                    <p:confirmDialog id="confirmDialog" widgetVar="dialogRolDelete" message="Esta seguro que desea eliminar el registro?"  showEffect="fade" hideEffect="fade"
+                                     header="Eliminar Registro" severity="alert" >
+                        <h:inputHidden value="#{rolBean.selectedRol.idPerfil}"/>  
+                        <p:commandButton id="confirm" value="Aceptar" update=":formCreate,:msgs" oncomplete="PF('dialogRolDelete').hide()"
+                                         actionListener="#{rolBean.btnDeleteRol(event)}" icon="ui-icon-check" />
+                        <p:commandButton id="decline" value="Cancelar" oncomplete="PF('dialogRolDelete').hide()" icon="ui-icon-close"/>
+                    </p:confirmDialog> 
+                </h:form>
+            </ui:define>        
+        </ui:composition>
+    </body>
+</html>

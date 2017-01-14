@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <div class="conteiner">
+            <ui:composition template="../../template.xhtml">
+                <ui:define name="content">
+                    <p:growl id="msgs" showDetail="true" />
+                    <h:form>
+                        <p:commandButton id="btnCreateCliente" update=":formCreate" oncomplete="PF('dialogClienteCreate').show()" title="Crear"  value="Crear Cliente"/>
+                    </h:form>
+
+                    <h:form id="formDataTable">
+                        <p:dataTable id="basicDT" var="cliente" value="#{clienteBean.clientes}"
+                                     paginator="true" paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                            <p:column headerText="Id">
+                                <h:outputText value="#{cliente.idCliente}" />
+                            </p:column>
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{cliente.nombre}" />
+                            </p:column>
+                            <p:column headerText="Cedula">
+                                <h:outputText value="#{cliente.cedula}" />
+                            </p:column>
+                            <p:column headerText="Email">
+                                <h:outputText value="#{cliente.email}" />
+                            </p:column>
+                            <p:column headerText="Direccion">
+                                <h:outputText value="#{cliente.direccion}" />
+                            </p:column>
+
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formUpdate" oncomplete="PF('dialogClienteUpdate').show()" icon="ui-icon-search" title="Actualizar">
+                                    <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.selectedCliente}" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formDelete" oncomplete="PF('dialogClienteDelete').show()" icon="ui-icon-cancel" title="Eliminar">
+                                    <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.selectedCliente}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <h:form id="formCreate">
+                        <p:dialog header="Create Cliente" widgetVar="dialogClienteCreate" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="dlgClienteCreate">
+                            <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+
+                                <h:outputLabel for="name" value="Nombre:" />
+                                <p:inputText id="name" value="#{clienteBean.cliente1.nombre}" required="true" label="name" />
+
+                                <h:outputLabel for="ci" value="Cedula:" />
+                                <p:inputText id="ci" value="#{clienteBean.cliente1.cedula}" required="true" label="name" />
+
+                                <h:outputLabel for="email" value="Email:" />
+                                <p:inputText id="email" value="#{clienteBean.cliente1.email}" required="true" label="name" />
+
+                                <h:outputLabel for="direccion" value="Direccion:" />
+                                <p:inputText id="dieccion" value="#{clienteBean.cliente1.direccion}" required="true" label="name" />
+
+                                <h:outputLabel for="password" value="Clave:" />
+                                <p:password id="password" value="#{clienteBean.usuario1.clave}" required="true" label="password" />
+
+                                <h:outputLabel for="confirmar_password" value="Confirmar contraseña:" />
+                                <p:password id="confirmar_password" value="#{clienteBean.usuario1.clave}" required="true" label="password" />
+
+                                <f:facet name="footer">
+                                    <p:commandButton value="Crear Cliente" actionListener="#{clienteBean.btnCreateCliente(event)}"
+                                                     oncomplete="handleLoginRequest(xhr, status, args)" />
+                                    <p:commandButton id="btnCreateCancelar"  oncomplete="PF('dialogClienteCreate').hide()" title="Cancelar"  value="Cancelar"/>
+                                </f:facet> 
+                            </p:panelGrid>
+                        </p:dialog>
+
+                    </h:form>
+
+                    <h:form id="formUpdate">
+                        <p:dialog header="Modificar Cliente" widgetVar="dialogClienteUpdate" id="dlgClienteUpdate" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                            <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+                                <h:outputText value="Id:" />
+                                <h:inputText value="#{clienteBean.selectedCliente.idCliente}" />
+
+                                <h:outputText value="Nombre:" />
+                                <p:inputText value="#{clienteBean.selectedCliente.nombre}" />
+
+                                <h:outputText value="Cedula:" />
+                                <p:inputText value="#{clienteBean.selectedCliente.cedula}" />
+
+                                <h:outputText value="Email:" />
+                                <p:inputText value="#{clienteBean.selectedCliente.email}" />
+
+                                <h:outputText value="Direccion:" />
+                                <p:inputText value="#{clienteBean.selectedCliente.direccion}" />
+
+                                <f:facet name="footer">
+
+                                    <p:commandButton id="btnUpdateAceptar" update=":formDataTable, :msgs" oncomplete="PF('dialogClienteUpdate').hide()" actionListener="#{clienteBean.btnUpdateCliente(event)}" title="Guardar" value="Guardar"/>
+                                    <p:commandButton id="btnUpdateCancelar" oncomplete="PF('dialogClienteUpdate').hide()" title="Cancelar" value="Cancelar"/>
+                                </f:facet>
+                            </p:panelGrid>
+                        </p:dialog> 
+                    </h:form>
+
+                    <h:form id="formDelete">
+                        <p:confirmDialog id="confirmDialog" widgetVar="dialogClienteDelete" message="Esta seguro que desea eliminar el registro?"  showEffect="fade" hideEffect="fade"
+                                         header="Eliminar Registro" severity="alert" >
+                            <h:inputHidden value="#{clienteBean.selectedCliente.idCliente}"/>  
+                            <p:commandButton id="confirm" value="Aceptar" update=":formCreate,:msgs" oncomplete="PF('dialogClienteDelete').hide()"
+                                             actionListener="#{clienteBean.btnDeleteCliente(event)}" icon="ui-icon-check" />
+                            <p:commandButton id="decline" value="Cancelar" oncomplete="PF('dialogClienteDelete').hide()" icon="ui-icon-close"/>
+                        </p:confirmDialog> 
+                    </h:form>
+                </ui:define>        
+            </ui:composition>
+        </div>
+
+    </body>
+</html>

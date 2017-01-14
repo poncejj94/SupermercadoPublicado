@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../template.xhtml">
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />
+                <h:form>
+                    <p:commandButton id="btnCreateCategoria" update=":formCreate" oncomplete="PF('dialogCategoriaCreate').show()" title="Crear"  value="Crear Categoria"/>
+                </h:form>
+
+                <h:form id="formDataTable">
+                    <p:dataTable id="basicDT" var="categoria" value="#{categoriaBean.categorias}"
+                                 paginator="true" paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                        <p:column headerText="Id">
+                            <h:outputText value="#{categoria.idCategoria}" />
+                        </p:column>
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{categoria.nombre}" />
+                        </p:column>
+                        <p:column headerText="Estado">
+                            <h:outputText value="#{categoria.estado}" />
+                        </p:column>
+
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":formUpdate" oncomplete="PF('dialogCategoriaUpdate').show()" icon="ui-icon-search" title="Actualizar">
+                                <f:setPropertyActionListener value="#{categoria}" target="#{categoriaBean.selectedCategoria}" />
+                            </p:commandButton>
+                        </p:column>
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":formDelete" oncomplete="PF('dialogCategoriaDelete').show()" icon="ui-icon-cancel" title="Eliminar">
+                                <f:setPropertyActionListener value="#{categoria}" target="#{categoriaBean.selectedCategoria}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="formCreate">
+                    <p:dialog header="Create Categoria" widgetVar="dialogCategoriaCreate" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="dlgCategoriaCreate">
+                        <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+
+                            <h:outputLabel for="name" value="Nombre:" />
+                            <p:inputText id="name" value="#{categoriaBean.categoria1.nombre}" required="true" label="name" />
+
+                            <h:outputLabel for="estado" value="Estado:" />
+                            <p:selectOneMenu id="estado" value="#{categoriaBean.categoria1.estado}">
+                                <f:selectItem itemLabel="Activo" itemValue="1" />
+                                <f:selectItem itemLabel="Inactivo" itemValue="0"/>
+                            </p:selectOneMenu>
+                            <f:facet name="footer">
+                                <p:commandButton value="Crear Categoria" actionListener="#{categoriaBean.btnCreateCategoria(event)}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                                <p:commandButton id="btnCreateCancelar"  oncomplete="PF('dialogCategoriaCreate').hide()" title="Cancelar"  value="Cancelar"/>
+                            </f:facet> 
+                        </p:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+
+                <h:form id="formUpdate">
+                    <p:dialog header="Modificar Categoria" widgetVar="dialogCategoriaUpdate" id="dlgCategoriaUpdate" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:panelGrid  id="display" columns="2" style="margin:0 auto;">
+                            <h:outputText value="Id:" />
+                            <h:inputText value="#{categoriaBean.selectedCategoria.idCategoria}" />
+
+                            <h:outputText value="Nombre:" />
+                            <p:inputText value="#{categoriaBean.selectedCategoria.nombre}" />
+
+                            <h:outputText value="Estado:" />
+                            <p:selectOneMenu id="estado" value="#{categoriaBean.selectedCategoria.estado}">
+                                <f:selectItem itemLabel="Activo" itemValue="true" />
+                                <f:selectItem itemLabel="Inactivo" itemValue="false"/>
+                            </p:selectOneMenu>
+                            <f:facet name="footer">
+
+                                <p:commandButton id="btnUpdateAceptar" update=":formDataTable, :msgs" oncomplete="PF('dialogCategoriaUpdate').hide()" actionListener="#{categoriaBean.btnUpdateCategoria(event)}" title="Guardar" value="Guardar"/>
+                                <p:commandButton id="btnUpdateCancelar" oncomplete="PF('dialogCategoriaUpdate').hide()" title="Cancelar" value="Cancelar"/>
+                            </f:facet>
+                        </p:panelGrid>
+                    </p:dialog> 
+                </h:form>
+
+                <h:form id="formDelete">
+                    <p:confirmDialog id="confirmDialog" widgetVar="dialogCategoriaDelete" message="Esta seguro que desea eliminar el registro?"  showEffect="fade" hideEffect="fade"
+                                     header="Eliminar Registro" severity="alert" >
+                        <h:inputHidden value="#{categoriaBean.selectedCategoria.idCategoria}"/>  
+                        <p:commandButton id="confirm" value="Aceptar" update=":formCreate,:msgs" oncomplete="PF('dialogCategoriaDelete').hide()"
+                                         actionListener="#{categoriaBean.btnDeleteCategoria(event)}" icon="ui-icon-check" />
+                        <p:commandButton id="decline" value="Cancelar" oncomplete="PF('dialogCategoriaDelete').hide()" icon="ui-icon-close"/>
+                    </p:confirmDialog> 
+                </h:form>
+            </ui:define>        
+        </ui:composition>
+    </body>
+</html>
